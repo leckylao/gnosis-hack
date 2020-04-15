@@ -1,5 +1,4 @@
 import CPK from 'contract-proxy-kit';
-import CpkWeb3Provider from 'contract-proxy-kit';
 import Web3 from 'web3';
 import React from 'react';
 import { Card, Form, Button, Text } from "rimble-ui";
@@ -8,13 +7,11 @@ import Web3Info from './components/Web3Info/index.js';
 const infuraToken = process.env.INFURA_ID || '95202223388e49f48b423ea50a70e336';
 const web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider(`wss://rinkeby.infura.io/ws/v3/${infuraToken}`))
 
-const cpkProvider = new CpkWeb3Provider({ web3 });
-console.log(cpkProvider);
-// let init = async() => {
-//   const cpk = await CPK.create({ cpkProvider });
-//   console.log(cpk);
-// }
-// init();
+let init = async() => {
+  const cpk = await CPK.create({ web3 });
+  console.log(cpk);
+}
+init();
 
 function App() {
   return (
