@@ -1,52 +1,25 @@
-import ULIFrameProvider from '@unilogin/provider';
-import Web3 from 'web3'
+import CPK from 'contract-proxy-kit';
+import CpkWeb3Provider from 'contract-proxy-kit';
+import Web3 from 'web3';
 import React from 'react';
 import { Card, Form, Button, Text } from "rimble-ui";
-import NetworkIndicator from "@rimble/network-indicator";
+import Web3Info from './components/Web3Info/index.js';
 
-const ulProvider = ULIFrameProvider.create('rinkeby');
-console.log(ulProvider);
-const web3 = new Web3(ulProvider);
-console.log(web3);
+const infuraToken = process.env.INFURA_ID || '95202223388e49f48b423ea50a70e336';
+const web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider(`wss://rinkeby.infura.io/ws/v3/${infuraToken}`))
 
-let networkId = "Unknown";
-switch (ulProvider.config.network) {
-  case "mainnet":
-    networkId = 1;
-    break;
-  case "kovan":
-    networkId = 42;
-    break;
-  case "ropsten":
-    networkId = 3;
-    break;
-  case "rinkeby":
-    networkId = 4;
-    break;
-  case "goerli":
-    networkId = 5;
-    break;
-  default:
-    break;
-}
-
-let asyncCall = async () => {
-  let result = await web3.eth.requestAccounts();
-  console.log(result);
-}
-
-asyncCall();
+const cpkProvider = new CpkWeb3Provider({ web3 });
+console.log(cpkProvider);
+// let init = async() => {
+//   const cpk = await CPK.create({ cpkProvider });
+//   console.log(cpk);
+// }
+// init();
 
 function App() {
   return (
     <div>
-      <NetworkIndicator currentNetwork={networkId} requiredNetwork={4}>
-        {{
-          onNetworkMessage: "Connected to correct network",
-          noNetworkMessage: "Not connected to anything",
-          onWrongNetworkMessage: "Wrong network"
-        }}
-      </NetworkIndicator>
+      <Web3Info web3={web3} />
       <Card bg={'background'}>
         <Form display={'flex'} flexDirection={'column'}>
           <Text fontSize={4} mb={4}>
