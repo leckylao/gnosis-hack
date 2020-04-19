@@ -10,6 +10,7 @@ import { Box } from "rimble-ui";
 import Web3Info from './components/Web3Info/index.js';
 import GnosisSafe from './components/GnosisSafe/index.js';
 import Header from './components/Header/index.js';
+import InstructionsCard from './components/InstructionsCard/index.js';
 
 export default function App() {
   let web3 = new Web3(Web3.givenProvider);
@@ -57,6 +58,7 @@ export default function App() {
         <Box>
           <Web3Info web3={web3} account={currentState.address} />
           <GnosisSafe web3={web3} notify={notify} account={currentState.address} />
+          <InstructionsCard />
         </Box>
       )}
     </div>
