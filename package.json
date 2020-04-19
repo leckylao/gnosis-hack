@@ -4,11 +4,12 @@
   "private": true,
   "dependencies": {
     "@rimble/network-indicator": "^1.2.3",
+    "bnc-notify": "^1.1.2",
+    "bnc-onboard": "^1.7.5",
     "contract-proxy-kit": "^1.1.1",
-    "dotenv": "^8.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.1",
     "rimble-ui": "^0.14.0",
     "styled-components": "^5.1.0",
     "web3": "1.2.6"

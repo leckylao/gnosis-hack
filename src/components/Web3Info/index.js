@@ -2,33 +2,33 @@ import React, { useState, useEffect, useCallback } from 'react';
 import NetworkIndicator from "@rimble/network-indicator";
 
 export default function Web3Info(props) {
-  const { web3 } = props;
+  const { web3, networkId } = props;
 
-  const [networkId, setNetworkId] = useState(0);
+  const [currentNetworkId, setNetworkId] = useState(0);
 
   const getNetworkId = useCallback( async() => {
     let networkType = await web3.eth.net.getNetworkType();
-    let networkId = "Unknown";
+    let currentNetworkId = "Unknown";
     switch (networkType) {
       case "mainnet":
-        networkId = 1;
+        currentNetworkId = 1;
         break;
       case "kovan":
-        networkId = 42;
+        currentNetworkId = 42;
         break;
       case "ropsten":
-        networkId = 3;
+        currentNetworkId = 3;
         break;
       case "rinkeby":
-        networkId = 4;
+        currentNetworkId = 4;
         break;
       case "goerli":
-        networkId = 5;
+        currentNetworkId = 5;
         break;
       default:
         break;
     }
-    setNetworkId(networkId);
+    setNetworkId(currentNetworkId);
   }, [web3]);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Web3Info(props) {
   }, [web3, getNetworkId]);
 
   return (
-    <NetworkIndicator currentNetwork={networkId} requiredNetwork={4}>
+    <NetworkIndicator currentNetwork={currentNetworkId} requiredNetwork={networkId}>
       {{
         onNetworkMessage: "Connected to correct network",
         noNetworkMessage: "Not connected to anything",
