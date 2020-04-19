@@ -4,15 +4,17 @@ import Notify from "bnc-notify";
 
 import Web3 from 'web3';
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Form, Button, Text } from "rimble-ui";
+import { Box } from "rimble-ui";
 
 // Components
 import Web3Info from './components/Web3Info/index.js';
 import GnosisSafe from './components/GnosisSafe/index.js';
+import Header from './components/Header/index.js';
 
 export default function App() {
   let web3 = new Web3(Web3.givenProvider);
-  const infuraToken = process.env.REACT_APP_INFURA_ID || '95202223388e49f48b423ea50a70e336';
+  let currentState;
+  // const infuraToken = process.env.REACT_APP_INFURA_ID || '95202223388e49f48b423ea50a70e336';
   const BNC_APIKey = process.env.REACT_APP_BNC_APIKey;
   const networkId = 4;
   const [connected, setConnected] = useState(false);
@@ -27,7 +29,7 @@ export default function App() {
     networkId: networkId,
     subscriptions: {
       wallet: wallet => {
-         web3 = new Web3(wallet.provider)
+        web3 = new Web3(wallet.provider)
       }
     }
   });
@@ -45,33 +47,18 @@ export default function App() {
   }, [init, onboard, connected]);
 
   if(connected){
-    const currentState = onboard.getState();
-    console.log(currentState);
+    currentState = onboard.getState();
   }
 
   return (
     <div>
-      {connected &&
-        <Web3Info web3={web3} networkId={networkId} />
-      }
-      {connected &&
-        <GnosisSafe web3={web3} notify={notify} />
-      }
-      <Card bg={'background'}>
-        <Form display={'flex'} flexDirection={'column'}>
-          <Text fontSize={4} mb={4}>
-            Sign In
-          </Text>
-          <Form.Field label={'Username'}>
-            <Form.Input type={'text'}  width={1} />
-          </Form.Field>
-          <Form.Field label={'Password'}>
-            <Form.Input type={'password'}  width={1} />
-          </Form.Field>
-          <Form.Check label={'Remember Me'} mb={3} />
-          <Button>Sign In</Button>
-        </Form>
-      </Card>
+      <Header />
+      {connected && (
+        <Box>
+          <Web3Info web3={web3} account={currentState.address} />
+          <GnosisSafe web3={web3} notify={notify} account={currentState.address} />
+        </Box>
+      )}
     </div>
   );
 }

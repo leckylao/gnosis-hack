@@ -1,47 +1,36 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import NetworkIndicator from "@rimble/network-indicator";
+import { Box, Text, Heading, EthAddress, Card } from "rimble-ui";
 
 export default function Web3Info(props) {
-  const { web3, networkId } = props;
+  const { web3, account} = props;
+  const [balance, setBalance] = useState(0);
 
-  const [currentNetworkId, setNetworkId] = useState(0);
-
-  const getNetworkId = useCallback( async() => {
-    let networkType = await web3.eth.net.getNetworkType();
-    let currentNetworkId = "Unknown";
-    switch (networkType) {
-      case "mainnet":
-        currentNetworkId = 1;
-        break;
-      case "kovan":
-        currentNetworkId = 42;
-        break;
-      case "ropsten":
-        currentNetworkId = 3;
-        break;
-      case "rinkeby":
-        currentNetworkId = 4;
-        break;
-      case "goerli":
-        currentNetworkId = 5;
-        break;
-      default:
-        break;
-    }
-    setNetworkId(currentNetworkId);
-  }, [web3]);
+  let getBalance = useCallback( async () => {
+    let balance = await web3.eth.getBalance(account);
+    setBalance(balance);
+  }, [web3, account]);
 
   useEffect(() => {
-    getNetworkId();
-  }, [web3, getNetworkId]);
+    if(web3 !== null)
+      getBalance();
+  }, [web3, getBalance]);
 
   return (
-    <NetworkIndicator currentNetwork={currentNetworkId} requiredNetwork={networkId}>
-      {{
-        onNetworkMessage: "Connected to correct network",
-        noNetworkMessage: "Not connected to anything",
-        onWrongNetworkMessage: "Wrong network"
-      }}
-    </NetworkIndicator>
+    <div>
+      {web3 && (
+        <Card maxWidth={'420px'} my={2} mx={'auto'} p={3} px={4}>
+          <Heading as={"h2"} p={3} textAlign='center'>Account Info</Heading>
+          <Box m={2}>
+            <Heading as={"h3"}>Address: </Heading>
+            <EthAddress address={account} textLabels />
+          </Box>
+          <Box m={2}>
+            <Heading as={"h3"}>Balance: </Heading>
+            <Text>{web3.utils.fromWei(web3.utils.toBN(balance))} eth</Text>
+          </Box>
+        </Card>
+        )
+      }
+    </div>
   )
 }
