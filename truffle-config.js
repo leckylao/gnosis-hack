@@ -29,12 +29,10 @@ module.exports = {
     rinkeby: configNetwork('rinkeby', 4),
     main: configNetwork('mainnet', 1, "m/44'/60'/0'/0/1'"),
   },
-
   // Set default mocha options here, use special reporters etc.
   mocha: {
     // timeout: 100000
   },
-
   // Configure your compilers
   compilers: {
     solc: {
