@@ -1,15 +1,21 @@
 const { accounts, contract } = require('@openzeppelin/test-environment');
 const [ owner ] = accounts;
 
-const Web3 = require('web3');
-const web3 = new Web3();
-const utils = require('@gnosis.pm/safe-contracts/test/utils/general');
-const CreateAndAddModules = artifacts.require("./CreateAndAddModules.sol");
-const GnosisSafe = artifacts.require("./GnosisSafe.sol");
-const ProxyFactory = artifacts.require("./GnosisSafeProxyFactory.sol");
-const AnswerRecoveryModule = artifacts.require("AnswerRecoveryModule");
-
 describe('AnswerRecoveryModule', function () {
+  const Web3 = require('web3');
+  const web3 = new Web3();
+  const utils = require('@gnosis.pm/safe-contracts/test/utils/general');
+  const CreateAndAddModules = artifacts.require("./CreateAndAddModules.sol");
+  const GnosisSafe = artifacts.require("./GnosisSafe.sol");
+  const ProxyFactory = artifacts.require("./GnosisSafeProxyFactory.sol");
+  const AnswerRecoveryModule = artifacts.require("AnswerRecoveryModule");
+
+  // https://forum.openzeppelin.com/t/openzeppelin-test-environment-global-web3-not-defined-error/2724
+  // const CreateAndAddModules = contract.fromArtifact("CreateAndAddModules");
+  // const GnosisSafe = contract.fromArtifact("GnosisSafe");
+  // const ProxyFactory = contract.fromArtifact("GnosisSafeProxyFactory");
+  // const AnswerRecoveryModule = contract.fromArtifact("AnswerRecoveryModule");
+
   let gnosisSafe;
   let answerRecoveryModule;
   let answer = "toyota;dog;sydney";
