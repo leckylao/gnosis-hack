@@ -12,12 +12,12 @@
     "react-scripts": "^3.4.1",
     "rimble-ui": "^0.14.0",
     "styled-components": "^5.1.0",
-    "web3": "1.2.6"
+    "web3": "^1.2.7"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "mocha --exit --recursive test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -36,9 +36,17 @@
     ]
   },
   "devDependencies": {
+    "@gnosis.pm/safe-contracts": "^1.1.1-dev.2",
+    "@openzeppelin/cli": "^2.8.2",
+    "@openzeppelin/test-environment": "^0.1.4",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/react": "^10.0.2",
     "@testing-library/user-event": "^10.0.1",
-    "@truffle/hdwallet-provider": "^1.0.34"
+    "@truffle/hdwallet-provider": "^1.0.34",
+    "eth-lightwallet": "^4.0.0",
+    "truffle": "^5.1.23"
+  },
+  "resolutions": {
+    "bitcore-lib": "^8.1.1"
   }
 }
