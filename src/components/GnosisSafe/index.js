@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Text, Heading, EthAddress, Card, Button } from "rimble-ui";
+import { Flash, Box, Text, Heading, EthAddress, Card, Button } from "rimble-ui";
 import CPK from 'contract-proxy-kit';
 import gnosisSafe from '../../abis/GnosisSafe.json';
 import answerRecoveryModule from '../../abis/AnswerRecoveryModule.json';
@@ -9,14 +9,30 @@ export default function GnosisSafe(props){
   const [cpk, setCpk] = useState(undefined);
   const [modules, setModules] = useState([]);
   const [balance, setBalance] = useState(0);
+  const [isOwner, setIsOwner] = useState(false);
   const answerRecoveryModuleMasterCopy = "0x4525AaAf8921AFF4cF364A5053187AcBcdF0572E";
 
   let createSafe = async () => {
     CPK.create({web3}).then(cpk => {
+      getIsOwner(cpk);
       setCpk(cpk);
       getBalance(cpk);
     })
   };
+
+  let loadSafe = async () => {
+    CPK.load({web3}, "0x84E087DbcC384C17e28f00fD1B61cF93251E70c3").then(cpk => {
+      getIsOwner(cpk);
+      setCpk(cpk);
+      getBalance(cpk);
+    })
+  };
+
+  let getIsOwner = async (cpk) => {
+    let gnosisSafeContract = new web3.eth.Contract(gnosisSafe, cpk.address);
+    let isOwner = await gnosisSafeContract.methods.isOwner(account).call();
+    setIsOwner(isOwner);
+  }
 
   let getModules = async (cpk, balance) => {
     if( balance === 0 )
@@ -68,10 +84,21 @@ export default function GnosisSafe(props){
         <Heading as={"h2"} p={3} textAlign='center'>Gnosis Safe Info</Heading>
         {cpk === undefined ? (
           <div>
-            <Button width={1} m={2} onClick={() => {createSafe()}}>Create Safe</Button>
+            <Button width={1} m={2} onClick={() => {createSafe()}}>Use Default Safe</Button>
+            Or
+            <Button width={1} m={2} onClick={() => {loadSafe()}}>Load Existing Safe</Button>
           </div>
         ) : (
           <div>
+            {isOwner ? (
+              <Flash my={2} variant="info">
+                You are the owner of this Safe
+              </Flash>
+            ) : (
+              <Flash my={2} variant="warning">
+                You are not the owner of this Safe
+              </Flash>
+            )}
             <Box p={2}>
               <Heading as={"h3"}>Address: </Heading>
               <EthAddress address={cpk.address} textLabels />
