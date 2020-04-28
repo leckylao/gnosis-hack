@@ -10,7 +10,6 @@ describe('AnswerRecoveryModule', function () {
   const ProxyFactory = artifacts.require("./GnosisSafeProxyFactory.sol");
   const AnswerRecoveryModule = artifacts.require("AnswerRecoveryModule");
 
-  // https://forum.openzeppelin.com/t/openzeppelin-test-environment-global-web3-not-defined-error/2724
   // const CreateAndAddModules = contract.fromArtifact("CreateAndAddModules");
   // const GnosisSafe = contract.fromArtifact("GnosisSafe");
   // const ProxyFactory = contract.fromArtifact("GnosisSafeProxyFactory");
@@ -48,7 +47,12 @@ describe('AnswerRecoveryModule', function () {
     assert.equal(await answerRecoveryModule.manager.call(), gnosisSafe.address);
   });
 
-  it('can recover by adding new owner', async function() {
+  it('can not recover by wrong answer', async function() {
+    utils.assertRejects(answerRecoveryModule.recoverAccess("wrong answer", accounts[2]), 'Wrong answer!')
+    assert.equal(await gnosisSafe.isOwner(accounts[2]), false);
+  });
+
+  it('can recover by correct answer with new owner', async function() {
     utils.logGasUsage("recover access", await answerRecoveryModule.recoverAccess(answer, accounts[2]));
     assert.equal(await gnosisSafe.isOwner(accounts[2]), true);
   });

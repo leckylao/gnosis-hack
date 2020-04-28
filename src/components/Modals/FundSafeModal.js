@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Form, Input, Flex, Modal, Box, Heading, Card, Button } from "rimble-ui";
-import GnosisSafe from '../GnosisSafe/index.js';
 
 export default function FundSafeModal (props){
   const {web3, cpk, notify, account, setBalance} = props;
