@@ -24,10 +24,11 @@ module.exports = {
       port: 8545,
       network_id: "*",
     },
-    ropsten: configNetwork('ropsten', 3),
-    kovan: configNetwork('kovan', 42),
-    rinkeby: configNetwork('rinkeby', 4),
     main: configNetwork('mainnet', 1, "m/44'/60'/0'/0/1'"),
+    kovan: configNetwork('kovan', 42),
+    ropsten: configNetwork('ropsten', 3),
+    rinkeby: configNetwork('rinkeby', 4),
+    goerli: configNetwork('goerli', 5),
   },
   // Set default mocha options here, use special reporters etc.
   mocha: {

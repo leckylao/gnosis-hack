@@ -18,6 +18,13 @@ export default function App() {
   // const infuraToken = process.env.REACT_APP_INFURA_ID || '95202223388e49f48b423ea50a70e336';
   const BNC_APIKey = process.env.REACT_APP_BNC_APIKey;
   const networkId = 4;
+  const networkIdToUrl = {
+    '1': 'https://etherscan.io/tx',
+    '42': 'https://kovan.etherscan.io/tx',
+    '3': 'https://ropsten.etherscan.io/tx',
+    '4': 'https://rinkeby.etherscan.io/tx',
+    '5': 'https://goerli.etherscan.io/tx',
+  }
   const [connected, setConnected] = useState(false);
 
   const notify = Notify({
@@ -57,7 +64,7 @@ export default function App() {
       {connected && (
         <Box>
           <Web3Info web3={web3} account={currentState.address} />
-          <GnosisSafe web3={web3} notify={notify} account={currentState.address} />
+          <GnosisSafe web3={web3} notify={notify} account={currentState.address} networkId={networkId} networkIdToUrl={networkIdToUrl} />
           <InstructionsCard />
         </Box>
       )}

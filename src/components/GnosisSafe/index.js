@@ -7,7 +7,7 @@ import LoadSafeModal from '../Modals/LoadSafeModal.js';
 import FundSafeModal from '../Modals/FundSafeModal.js';
 
 export default function GnosisSafe(props){
-  const { web3, notify, account } = props;
+  const { web3, notify, account, networkId, networkIdToUrl } = props;
   const [cpk, setCpk] = useState(undefined);
   const [modules, setModules] = useState([]);
   const [balance, setBalance] = useState(0);
@@ -53,6 +53,17 @@ export default function GnosisSafe(props){
     getModules(cpk, balance);
   };
 
+  function notifyConfirmation(hash){
+    const {emitter} = notify.hash(hash);
+    emitter.on('txConfirmed', (transaction) => {
+      return {
+        onclick: () => {
+          window.open(`${networkIdToUrl[networkId]}/${transaction.hash}`)
+        }
+      }
+    });
+  }
+
   let enableRecovery = async () => {
     let gnosisSafeContract = new web3.eth.Contract(gnosisSafe, cpk.masterCopyAddress);
     let answerRecoveryModuleContract = new web3.eth.Contract(answerRecoveryModule, answerRecoveryModuleMasterCopy);
@@ -60,8 +71,6 @@ export default function GnosisSafe(props){
     let answer = "toyota;dog;sydney";
     answer = web3.utils.keccak256(answer);
     let setupData = await answerRecoveryModuleContract.methods.setup(answer).encodeABI();
-    const Address1 = "0x".padEnd(41, '0') + "1"
-    // let disableModuleData = await gnosisSafeContract.methods.disableModule(Address1, modules[0]).encodeABI();
     const { promiEvent, hash } = await cpk.execTransactions([
       {
         operation: CPK.CALL,
@@ -83,7 +92,7 @@ export default function GnosisSafe(props){
       // }
     ]);
 
-    notify.hash(hash);
+    notifyConfirmation(hash);
     promiEvent.on('confirmation', () => {
       getBalance(cpk);
     });
@@ -93,19 +102,9 @@ export default function GnosisSafe(props){
     let answerRecoveryModuleContract = new web3.eth.Contract(answerRecoveryModule, answerRecoveryModuleMasterCopy);
     let answer = "toyota;dog;sydney";
     answer = web3.utils.keccak256(answer);
-    let recoverAccessData = await answerRecoveryModuleContract.methods.recoverAccess(answer, account).encodeABI();
-    console.log(account);
-    const { promiEvent, hash } = await cpk.execTransactions([
-      {
-        operation: CPK.CALL,
-        to: answerRecoveryModuleMasterCopy,
-        value: 0,
-        data: recoverAccessData,
-      }
-    ]);
-
-    notify.hash(hash);
-    promiEvent.on('confirmation', () => {
+    answerRecoveryModuleContract.methods.recoverAccess(answer, account).send({from: account}).on('transactionHash', hash => {
+      notifyConfirmation(hash);
+    }).on('confirmation', () => {
       getIsOwner(cpk);
     });
   };
@@ -131,10 +130,6 @@ export default function GnosisSafe(props){
                 <Flash my={2} variant="warning">
                   You are not the owner of this Safe
                 </Flash>
-                <Card maxWidth={'420px'} mx={'auto'} my={2} p={3} px={4}>
-                  <Heading as={"h2"} p={3} textAlign='center'>Gnosis Recovery</Heading>
-                    <Button width={1} m={2} onClick={() => {recoverSafe()}}>Recover Safe</Button>
-                </Card>
               </div>
             )}
             <Box p={2}>
@@ -144,13 +139,20 @@ export default function GnosisSafe(props){
             <Box p={2}>
               <Heading as={"h3"}>Balance: </Heading>
               <Text>{web3.utils.fromWei(web3.utils.toBN(balance))} eth</Text>
-              <FundSafeModal web3={web3} cpk={cpk} notify={notify} account={account} setBalance={setBalance}/>
+              <FundSafeModal web3={web3} cpk={cpk} notifyConfirmation={notifyConfirmation} account={account} CPK={CPK} getBalance={getBalance} />
               {modules.length === 0 && balance > 0 && (
                 <div>
                   <Button width={1} m={2} onClick={enableRecovery}>Enable Recovery</Button>
                 </div>
               )}
             </Box>
+            {!isOwner && (
+              <Card maxWidth={'420px'} mx={'auto'} my={2} p={3} px={4}>
+                <Heading as={"h2"} p={3} textAlign='center'>Gnosis Recovery</Heading>
+                  <Text.p>Answer the following questions correctly in order to recover this safe </Text.p>
+                  <Button width={1} m={2} onClick={() => {recoverSafe()}}>Recover Safe</Button>
+              </Card>
+            )}
           </div>
         )}
       </Card>

@@ -22,7 +22,6 @@ contract AnswerRecoveryModule is Module {
   function recoverAccess(bytes memory _answer, address newOwner)
   public
   {
-    // require(newOwner.length > 0, "New owners are required!");
     bytes32 answer = keccak256(_answer);
     require(addresses[answer] != address(0), "Wrong answer!");
     bytes memory addOwnerData = abi.encodeWithSignature("addOwnerWithThreshold(address,uint256)", newOwner, 1);
