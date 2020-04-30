@@ -27,21 +27,37 @@ describe('AnswerRecoveryModule', function () {
     let createAndAddModules = await CreateAndAddModules.new();
     let gnosisSafeMasterCopy = await utils.deployContract("deploying Gnosis Safe Mastercopy", GnosisSafe);
     let answerRecoveryModuleMasterCopy = await AnswerRecoveryModule.new();
-    // Initialize module master copy
-    // answerRecoveryModuleMasterCopy.setup("toyota;dog;sydney")
+    // Create lightwallet
+    let lw = await utils.createLightwallet();
+    const CALL = 0;
 
     // Create Gnosis Safe and Answer Recovery Module in one transactions
-    let moduleData = await answerRecoveryModuleMasterCopy.contract.methods.setup(answer).encodeABI();
+    let moduleData = await answerRecoveryModuleMasterCopy.contract.methods.setup().encodeABI();
     let proxyFactoryData = await proxyFactory.contract.methods.createProxy(answerRecoveryModuleMasterCopy.address, moduleData).encodeABI();
     let modulesCreationData = utils.createAndAddModulesData([proxyFactoryData]);
     let createAndAddModulesData = createAndAddModules.contract.methods.createAndAddModules(proxyFactory.address, modulesCreationData).encodeABI();
     let gnosisSafeData = await gnosisSafeMasterCopy.contract.methods.setup(
-      [accounts[0], accounts[1]], 2, createAndAddModules.address, createAndAddModulesData, utils.Address0, utils.Address0, 0, utils.Address0
+      [lw.accounts[0], lw.accounts[1]], 2, createAndAddModules.address, createAndAddModulesData, utils.Address0, utils.Address0, 0, utils.Address0
     ).encodeABI();
     gnosisSafe = await utils.getParamFromTxEvent(
       await proxyFactory.createProxy(gnosisSafeMasterCopy.address, gnosisSafeData),
       'ProxyCreation', 'proxy', proxyFactory.address, GnosisSafe, 'create Gnosis Safe and Answer Recovery Module',
     )
+
+    let execTransaction = async function(safe, to, value, data, operation, message) {
+      let nonce = await safe.nonce()
+      let transactionHash = await safe.getTransactionHash(to, value, data, operation, 0, 0, 0, utils.Address0, utils.Address0, nonce)
+      let sigs = utils.signTransaction(lw, [lw.accounts[0], lw.accounts[1]], transactionHash)
+      utils.logGasUsage(
+        'execTransaction ' + message,
+        await safe.execTransaction(to, value, data, operation, 0, 0, 0, utils.Address0, utils.Address0, sigs)
+      )
+    }
+
+    // Enable Recovery
+    let enableRecoveryData = await answerRecoveryModuleMasterCopy.contract.methods.enableRecovery(answer).encodeABI();
+    await execTransaction(gnosisSafe, answerRecoveryModuleMasterCopy.address, 0, enableRecoveryData, CALL, "Enable Recovery")
+
     modules = await gnosisSafe.getModules();
     answerRecoveryModule = await AnswerRecoveryModule.at(modules[0]);
     assert.equal(await answerRecoveryModule.manager.call(), gnosisSafe.address);
