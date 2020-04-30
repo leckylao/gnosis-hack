@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Flex, Modal, Box, Heading, Card, Button } from "rimble-ui";
 
 export default function FundSafeModal (props){
-  const {web3, cpk, notifyConfirmation, account, CPK, getBalance} = props;
+  const {web3, cpk, notifyConfirmation, account, CPK, getBalance, isOwner} = props;
   const [amount, setAmount] = useState(0);
   const [isOpenDeposit, setIsOpenDeposit] = useState(false);
   const [isOpenWithdraw, setIsOpenWithdraw] = useState(false);
@@ -41,8 +41,14 @@ export default function FundSafeModal (props){
 
   return (
     <div>
-      <Button width={1/3} mx={4} my={2} onClick={() => { setIsOpenDeposit(true) }}>Deposit</Button>
-      <Button width={1/3} mx={3} my={2} onClick={() => { setIsOpenWithdraw(true) }}>Withdraw</Button>
+      {isOwner ? (
+        <Box>
+          <Button width={1/3} mx={4} my={2} onClick={() => { setIsOpenDeposit(true) }}>Deposit</Button>
+          <Button width={1/3} mx={3} my={2} onClick={() => { setIsOpenWithdraw(true) }}>Withdraw</Button>
+        </Box>
+      ) : (
+        <Button width={1} my={2} onClick={() => { setIsOpenDeposit(true) }}>Deposit</Button>
+      )}
       <Modal isOpen={isOpenDeposit}>
         <Card p={0}>
           <Form onSubmit={deposit} >

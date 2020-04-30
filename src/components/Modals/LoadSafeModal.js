@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Flex, Modal, Box, Heading, Card, Button } from "rimble-ui";
 
 export default function LoadSafeModal (props){
-  const { setSafeAddress,  loadSafe } = props;
+  const { setSafeAddress,  createSafe } = props;
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -10,7 +10,7 @@ export default function LoadSafeModal (props){
       <Button width={1} m={2} onClick={() => { setIsOpen(true) }}>Load Existing Safe</Button>
       <Modal isOpen={isOpen}>
         <Card p={0}>
-          <Form onSubmit={loadSafe} >
+          <Form onSubmit={createSafe} >
             <Box p={4} >
               <Heading.h3>Safe address</Heading.h3>
               <Input

@@ -51,8 +51,12 @@ describe('AnswerRecoveryModule', function () {
     await execTransaction(gnosisSafe, gnosisSafe.address, 0, enableModuleData, CALL, "enable module");
 
     // Setup module
-    let moduleData = await answerRecoveryModuleMasterCopy.contract.methods.setup(answer).encodeABI();
+    let moduleData = await answerRecoveryModuleMasterCopy.contract.methods.setup().encodeABI();
     await execTransaction(gnosisSafe, answerRecoveryModuleMasterCopy.address, 0, moduleData, CALL, "setup module")
+
+    // Enable Recovery
+    let enableRecoveryData = await answerRecoveryModuleMasterCopy.contract.methods.enableRecovery(answer).encodeABI();
+    await execTransaction(gnosisSafe, answerRecoveryModuleMasterCopy.address, 0, enableRecoveryData, CALL, "Enable Recovery")
 
     modules = await gnosisSafe.getModules();
     answerRecoveryModule = await AnswerRecoveryModule.at(modules[0]);

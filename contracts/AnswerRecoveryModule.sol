@@ -3,18 +3,22 @@ pragma solidity >=0.5.3 <0.6.0;
 import "@gnosis.pm/safe-contracts/contracts/base/Module.sol";
 // Required for triggering execution
 import "@gnosis.pm/safe-contracts/contracts/common/Enum.sol";
+import "@gnosis.pm/safe-contracts/contracts/common/SelfAuthorized.sol";
 
-contract AnswerRecoveryModule is Module {
+contract AnswerRecoveryModule is SelfAuthorized, Module {
 
   string public constant NAME = "Recovery Module";
   string public constant VERSION = "0.1.0";
 
   mapping (bytes32 => address) internal addresses;
 
-  function setup(bytes memory _answer)
+  function setup()
   public
   {
     setManager();
+  }
+
+  function enableRecovery(bytes memory _answer) public authorized{
     bytes32 answer = keccak256(_answer);
     addresses[answer] = msg.sender;
   }
