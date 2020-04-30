@@ -1,6 +1,10 @@
 ## Name of Project
 Gnosis Safe Recovery Module - Created by Lecky Lao
 
+## Bounties
+- https://explorer.bounties.network/bounty/3937
+- https://explorer.bounties.network/bounty/3938
+
 ## Project Description
 This demo shows how to enable recovery answers and how to recover the safe using these answers on another account
 
