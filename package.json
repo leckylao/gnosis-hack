@@ -7,6 +7,7 @@
     "bnc-notify": "^1.1.2",
     "bnc-onboard": "^1.7.5",
     "contract-proxy-kit": "^1.1.1",
+    "gh-pages": "^2.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",
@@ -18,7 +19,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "mocha --exit --recursive test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,5 +50,6 @@
   },
   "resolutions": {
     "bitcore-lib": "^8.1.1"
-  }
+  },
+  "homepage": "https://leckylao.github.io/gnosis-hack/"
 }

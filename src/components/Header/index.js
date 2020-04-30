@@ -6,7 +6,7 @@ class Header extends React.Component {
     return (
       <Box bg="primary" p={3} justifyContent="center" flexDirection="column">
         <Box maxWidth="400px" mx="auto">
-          <Heading fontSize={4} color={"white"}>Gnosis Hack</Heading>
+          <Heading fontSize={4} color={"white"}>Gnosis Safe Answers Recovery</Heading>
         </Box>
       </Box>
     );
