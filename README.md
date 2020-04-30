@@ -16,6 +16,8 @@ The contracts are deployed on Rinkeby and can be checked at https://github.com/l
 
 For more visualization, check the Demo: https://youtu.be/eSQhHdYlpyg
 
+Live Demo: https://leckylao.github.io/gnosis-hack/
+
 ## Project Team
 
 Lecky Lao
