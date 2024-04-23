@@ -7,7 +7,7 @@
     "bnc-notify": "^1.1.2",
     "bnc-onboard": "^1.7.5",
     "contract-proxy-kit": "^1.1.1",
-    "gh-pages": "^2.2.0",
+    "gh-pages": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1",
